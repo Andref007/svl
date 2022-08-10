@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 export function FormBook() {
   const [validated, setValidated] = useState(false);
   let [estados, setEstados] = useState([])
-  let[cidades, setCidades] = useState([])
+  let [cidades, setCidades] = useState([])
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -21,29 +21,31 @@ export function FormBook() {
   };
 
 
-const fetchEstados = () => {
-  // por padrão o método fetch vazio é o GET
-  fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome')
-  .then(response => response.json())
-  .then(data => {
-    // console.log('estados', data)
-    setEstados(data)
-  })
-}
+  const fetchEstados = () => {
+    // por padrão o método fetch vazio é o GET
+    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome')
+      .then(response => response.json())
+      .then(data => {
+        // console.log('estados', data)
+        setEstados(data)
+      })
+  }
 
-const fetchCidades = sigla => {
-  fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${sigla}/municipios`)
-  .then(response => response.json())
-  .then(data => {
-    console.log('lista_cidades', data)
-    setCidades(data)
-  })
+  const fetchCidades = sigla => {
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${sigla}/municipios`)
+      .then(response => response.json())
+      .then(data => {
+        // data -> array
+        // map() -> semelhante ao for
+        setCidades(data.map(city => <option>{city.nome}</option>))
+        
+      })
 
-}
+  }
 
   useEffect(() => {
     fetchEstados()
-  },[])
+  }, [])
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -55,7 +57,7 @@ const fetchCidades = sigla => {
             required
             type="text"
             placeholder="Digite o Título"
-            //defaultValue="Mark"
+          //defaultValue="Mark"
           />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>
@@ -65,7 +67,7 @@ const fetchCidades = sigla => {
             required
             type="text"
             placeholder="Autor"
-            //defaultValue="Otto"
+          //defaultValue="Otto"
           />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>
@@ -86,20 +88,31 @@ const fetchCidades = sigla => {
         </Form.Group> */}
       </Row>
       <Row className="mb-3">
-        
+
 
         <Form.Group as={Col} md="3" controlId="validationCustom04">
           <Form.Label>Estado</Form.Label>
-          <Form.Select 
-          aria-label="Default select example"  
-          onChange={e => {
-           
-            let sigla = e.target.value
-            fetchCidades(sigla)
-          }}>
-        <option>Selecione</option>
+          <Form.Select
+            aria-label="Default select example"
+            onChange={e => {
+
+              let sigla = e.target.value
+              fetchCidades(sigla)
+            }}>
+            <option>Selecione</option>
             {estados.map(estado => <option value={estado.sigla}>{estado.nome}</option>)}
-      </Form.Select>
+          </Form.Select>
+        </Form.Group>
+
+
+        <Form.Group as={Col} md="3" controlId="validationCustom04">
+          <Form.Label>Cidade</Form.Label>
+          <Form.Select
+            aria-label="Default select example">
+            <option>Selecione</option>
+            {cidades}
+
+          </Form.Select>
         </Form.Group>
 
       </Row>
