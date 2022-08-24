@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react'
 import BootstrapTable from 'react-bootstrap-table-next'
 
 export default function BookTable() {
-
+// 1- Criar o state que vai conter a lista da API
   let [posts, setPosts] = useState([])
 
+
+  // 2 - criar o objeto colunas, no qual o datafiled é a propriedade do objeto
   const columns = [
     {
       dataField: 'id',
